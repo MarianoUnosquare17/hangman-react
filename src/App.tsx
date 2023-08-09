@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
+
 function App() {
+  const [game, setGame] = useState({
+    alphabet: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P','Q', 'R', 'S', 'T','U', 'V', 'W', 'X', 'Y', 'Z'],
+    guessesLeft: 10
+    
+  })
+  const [words, setWords] = useState(['React', 'Typescript', 'Web', 'Javascript', 'Vue', 'Unosquare'])
+  const randomIndex = Math.floor(Math.random() * words.length);
+  const selectedWord =words[randomIndex]
+  const [displayedWord, setDisplayedWord] = useState('_ '.repeat(selectedWord.length));
+
   return (
     <div className='flex flex-col items-center mt-10'>
       <div className="text-5xl font-bold mb-10">Hangman Game</div>
       <div className='flex flex-col md:flex-row w-full md:w-4/6 mx-auto justify-center items-center md:space-x-8'> 
-        <div className='flex-auto w-full md:w-1/3 md:order-1 md:mr-4 text-center md:text-left'> 
+        <div className='flex-auto w-full md:w-2/5 md:order-1 md:mr-4 text-center md:text-left'> 
           <div className='text-2xl font-bold mb-2 mt-5 md:mt-0'> 
-            Guesses left: 0
+            Guesses left: {game.guessesLeft}
           </div>
           <div className='text-2xl font-bold mb-2 mt-5 md:mt-0'> 
             Wrong Guesses: 
@@ -25,21 +36,21 @@ function App() {
             </button>
           </div>
         </div>
-        <div className='flex-auto w-full md:w-1/2 md:order-2 md:mt-7 mt-4 flex-col text-center md:text-left'> 
+        <div className='flex-auto w-full md:w-2/8 md:order-2 md:mt-7 mt-4 flex-col text-center md:text-left'> 
           <div className='text-6xl'>
-            _ _ _ _ a _ _
+           {displayedWord}
           </div>
           <div className='text-3xl mt-4'> 
             <input
               type="text"
-              className="px-4 py-1 border mt-4 focus:outline-none text-sm rounded-md w-56 h-10"
+              className="px-4 py-0 border mt-4 focus:outline-none text-sm rounded-md w-56 h-10"
               placeholder="Type your guess"
             />
             <button
               onClick={() => {}}
-              className="px-4 py-2 rounded-md font-bold text-sm bg-blue-500 text-white mt-4" 
+              className="px-2 py-2 rounded-md font-bold text-sm bg-blue-500 text-white mt-4" 
             >
-              Sub
+              Submit
             </button>
           </div>
         </div>
