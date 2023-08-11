@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import './App.css'
 
 function App () {
-  const [guess, setGuess] = useState<number>(5)
+  const [guess, setGuess] = useState<number>(5);
   const [words, setWords] = useState<string[]>([
     'React',
     'Typescript',
@@ -14,29 +14,41 @@ function App () {
     'String',
     'Java',
     'Localhost',
-    'Developer'
-  ])
-  const randomIndex: number = Math.floor(Math.random() * words.length)
-  const selectedInitialWord: string = words[randomIndex]
-  const [displayedWord, setDisplayedWord] = useState(
-    '_ '.repeat(selectedInitialWord.length)
-  )
-  const [guessedWord, setGuessedWord] = useState<string>('')
-  const inputRef = useRef<HTMLInputElement>(null);
+    'Developer',
+  ]);
 
-  function startNewGame () {
-    const newRandomIndex: number = Math.floor(Math.random() * words.length)
-    const newSecretWord: string = words[newRandomIndex]
-    //Set guesses left a 10
-    setDisplayedWord('_ '.repeat(newSecretWord.length))
-    console.log(newSecretWord)
+  const [selectedWordIndex, setSelectedWordIndex] = useState<number>(
+    Math.floor(Math.random() * words.length)
+  );
+
+  const [displayedWord, setDisplayedWord] = useState<string>(
+    '_ '.repeat(words[selectedWordIndex].length)
+  );
+
+  const [guessedLetter, setGuessedLetter] = useState<string>('');
+  const [gameState, setGameState] = useState<string>('new');
+  console.log(displayedWord)
+  function startNewGame() {
+    const newRandomIndex: number = Math.floor(Math.random() * words.length);
+    setSelectedWordIndex(newRandomIndex);
+    setDisplayedWord('_ '.repeat(words[newRandomIndex].length));
+    setGuess(5);
+    setGameState('new');
+    console.log(displayedWord)
   }
 
-  function submitGuess (e: any) {
-    setGuess(guess - 1)
-    console.log(guessedWord)
-    //Poner condicion para cuando se llegue a  0
+  function submitGuess(e:any) {
+    setGuess(guess - 1);
+    console.log(guessedLetter);
+    // Set wrong guesses
+    if (guess === 1) {
+      window.alert('Perdiste');
+      startNewGame();
+    }
   }
+
+
+  
 
   return (
     <div className='flex flex-col items-center mt-10'>
@@ -67,12 +79,11 @@ function App () {
               type='text'
               className='px-4 py-0 border mt-4 focus:outline-none text-sm rounded-md w-56 h-10'
               placeholder='Type your guess'
-              value={guessedWord}
-              onChange={e => setGuessedWord(e.target.value)}
-              ref={inputRef} 
+              value={guessedLetter}
+              onChange={e => setGuessedLetter(e.target.value)}
             />
             <button
-              onClick={() => submitGuess(guessedWord)}
+              onClick={() => submitGuess(guessedLetter)}
               className='px-2 py-2 rounded-md font-bold text-sm bg-blue-500 text-white mt-4'
             >
               Submit
