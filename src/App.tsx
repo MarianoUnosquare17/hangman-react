@@ -16,36 +16,51 @@ function App () {
     'Localhost',
     'Developer',
   ]);
-
   const [selectedWordIndex, setSelectedWordIndex] = useState<number>(
     Math.floor(Math.random() * words.length)
   );
-
+  const selectedInitialWord: string = words[selectedWordIndex].toLowerCase();
   const [displayedWord, setDisplayedWord] = useState<string>(
-    '_ '.repeat(words[selectedWordIndex].length)
+    '_ '.repeat(selectedInitialWord.length)
   );
-
   const [guessedLetter, setGuessedLetter] = useState<string>('');
   const [gameState, setGameState] = useState<string>('new');
-  console.log(displayedWord)
+
   function startNewGame() {
     const newRandomIndex: number = Math.floor(Math.random() * words.length);
     setSelectedWordIndex(newRandomIndex);
-    setDisplayedWord('_ '.repeat(words[newRandomIndex].length));
+    const newSelectedInitialWord: string = words[newRandomIndex].toLowerCase();
+    console.log("Selected Word:", newSelectedInitialWord); 
+    setDisplayedWord('_ '.repeat(newSelectedInitialWord.length));
     setGuess(5);
     setGameState('new');
-    console.log(displayedWord)
   }
 
   function submitGuess(e:any) {
+    if (guessedLetter.length === 1) {
+      const newDisplayedWord = displayedWord.split(' ');
+
+      const updatedDisplayedWord = selectedInitialWord
+        .split('')
+        .map((letter, index) =>
+          letter === guessedLetter
+            ? guessedLetter
+            : newDisplayedWord[index]
+        )
+        .join(' ');
+
+      setDisplayedWord(updatedDisplayedWord);
+    }
+
     setGuess(guess - 1);
-    console.log(guessedLetter);
+
     // Set wrong guesses
     if (guess === 1) {
       window.alert('Perdiste');
       startNewGame();
     }
   }
+
 
 
   
