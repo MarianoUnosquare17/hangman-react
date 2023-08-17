@@ -1,9 +1,11 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import './App.css';
 
 type Action =
   | { type: 'RESET_GAME' }
-  | { type: 'SUBMIT_GUESS'; guessedLetter: string };
+  | { type: 'SUBMIT_GUESS'; guessedLetter: string }
+  | { type: 'UPDATE_DISPLAYED_WORD'; updatedDisplayedWord: string }
+  | { type: 'SET_GUESSED_LETTER'; guessedLetter: string };
 
 interface GameState {
   guess: number;
@@ -28,9 +30,9 @@ const initialState: GameState = {
     'String',
     'Java',
     'Localhost',
-    'Developer'
+    'Developer',
   ],
-  selectedWordIndex: 0,
+  selectedWordIndex: Math.floor(Math.random() * 11), 
   selectedInitialWord: '',
   displayedWord: '',
   guessedLetter: '',
@@ -51,6 +53,7 @@ function gameReducer(state: GameState, action: Action): GameState {
         guessedLetter: '',
         gameState: 'new',
       };
+
     case 'SUBMIT_GUESS':
       const newDisplayedWord = state.displayedWord.split(' ');
       const updatedDisplayedWord = state.selectedInitialWord
@@ -61,7 +64,7 @@ function gameReducer(state: GameState, action: Action): GameState {
             : newDisplayedWord[index]
         )
         .join(' ');
-
+        console.log(updatedDisplayedWord)
       return {
         ...state,
         displayedWord: updatedDisplayedWord,
@@ -69,6 +72,19 @@ function gameReducer(state: GameState, action: Action): GameState {
         guess: state.guess - 1,
         gameState: state.guess === 1 ? 'lost' : state.gameState,
       };
+
+    case 'UPDATE_DISPLAYED_WORD':
+      return {
+        ...state,
+        displayedWord: action.updatedDisplayedWord,
+      };
+
+    case 'SET_GUESSED_LETTER':
+      return {
+        ...state,
+        guessedLetter: action.guessedLetter,
+      };
+
     default:
       return state;
   }
@@ -77,12 +93,29 @@ function gameReducer(state: GameState, action: Action): GameState {
 function App() {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
+  useEffect(() => {
+    const newSelectedInitialWord = state.words[state.selectedWordIndex].toLowerCase();
+    dispatch({ type: 'UPDATE_DISPLAYED_WORD', updatedDisplayedWord: '_ '.repeat(newSelectedInitialWord.length) });
+  }, [state.selectedWordIndex, state.words]);
+
   function startNewGame() {
     dispatch({ type: 'RESET_GAME' });
   }
 
   function submitGuess() {
     dispatch({ type: 'SUBMIT_GUESS', guessedLetter: state.guessedLetter });
+
+    const newDisplayedWord = state.displayedWord.split(' ');
+    const updatedDisplayedWord = state.selectedInitialWord
+      .split('')
+      .map((letter, index) =>
+        letter === state.guessedLetter
+          ? state.guessedLetter
+          : newDisplayedWord[index]
+      )
+      .join(' ');
+
+    dispatch({ type: 'UPDATE_DISPLAYED_WORD', updatedDisplayedWord });
   }
 
   return (
@@ -96,10 +129,7 @@ function App() {
           <div className='text-2xl font-bold mb-2 mt-5 md:mt-0'>
             Wrong Guesses:
           </div>
-          {/* Mostrar las letras incorrectas aquí */}
-          <div className='text-1xl font-bold mb-2 mt-3 md:mt-0'>
-            {state.guessedLetter}
-          </div>
+          <div className='text-1xl font-bold mb-2 mt-3 md:mt-0'>{/* aca van los wrong quesses */}</div>
           <div className='flex justify-center md:justify-start mt-5'>
             <button
               onClick={startNewGame}
@@ -120,7 +150,7 @@ function App() {
               value={state.guessedLetter}
               onChange={e =>
                 dispatch({
-                  type: 'SUBMIT_GUESS',
+                  type: 'SET_GUESSED_LETTER',
                   guessedLetter: e.target.value,
                 })
               }
