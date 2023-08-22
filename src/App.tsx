@@ -5,7 +5,9 @@ type Action =
   | { type: 'RESET_GAME' }
   | { type: 'SUBMIT_GUESS'; guessedLetter: string }
   | { type: 'UPDATE_DISPLAYED_WORD'; updatedDisplayedWord: string }
-  | { type: 'SET_GUESSED_LETTER'; guessedLetter: string };
+  | { type: 'SET_GUESSED_LETTER'; guessedLetter: string }
+  | { type: 'SET_SELECTED_INITIAL_WORD'; selectedInitialWord: string }; // Agrega esta línea
+
 
 interface GameState {
   guess: number;
@@ -64,7 +66,6 @@ function gameReducer(state: GameState, action: Action): GameState {
             : newDisplayedWord[index]
         )
         .join(' ');
-        console.log(updatedDisplayedWord)
       return {
         ...state,
         displayedWord: updatedDisplayedWord,
@@ -85,22 +86,42 @@ function gameReducer(state: GameState, action: Action): GameState {
         guessedLetter: action.guessedLetter,
       };
 
+      case 'SET_SELECTED_INITIAL_WORD':
+  return {
+    ...state,
+    selectedInitialWord: action.selectedInitialWord,
+  };
+
     default:
       return state;
   }
 }
 
 function App() {
+  
   const [state, dispatch] = useReducer(gameReducer, initialState);
+
+  useEffect(() => {
+    console.log("Selected Word:", state.selectedInitialWord);
+  }, [state.selectedInitialWord]);
+
+  useEffect(() => {
+    console.log("Guessed Letter:", state.guessedLetter);
+  }, [state.guessedLetter]);
 
   useEffect(() => {
     const newSelectedInitialWord = state.words[state.selectedWordIndex].toLowerCase();
     dispatch({ type: 'UPDATE_DISPLAYED_WORD', updatedDisplayedWord: '_ '.repeat(newSelectedInitialWord.length) });
+    dispatch({ type: 'SET_SELECTED_INITIAL_WORD', selectedInitialWord: newSelectedInitialWord });
   }, [state.selectedWordIndex, state.words]);
+//hice esto
 
-  function startNewGame() {
-    dispatch({ type: 'RESET_GAME' });
-  }
+function startNewGame() {
+  dispatch({ type: 'RESET_GAME' });
+  dispatch({ type: 'SET_SELECTED_INITIAL_WORD', selectedInitialWord: '' }); // Restablecer la palabra inicial seleccionada
+}
+
+//hice esto
 
   function submitGuess() {
     dispatch({ type: 'SUBMIT_GUESS', guessedLetter: state.guessedLetter });
