@@ -3,9 +3,14 @@ import './App.css';
 import useGameReducer from './lib/useGameReducer.ts';
 import { GameStatus } from './components/GameStatus.tsx';
 import { HangmanGame } from './components/HangmanGame.tsx';
+import { WordProvider } from './lib/wordProvider.ts';
 
-function App() {
-  const [state, dispatch] = useGameReducer();
+interface AppProps {
+  wordProvider: WordProvider;
+}
+
+function App({ wordProvider }: AppProps) {
+  const [state, dispatch] = useGameReducer(wordProvider);
 
   // start a new game when the app loads
   useEffect(() => {
