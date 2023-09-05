@@ -19,18 +19,6 @@ function App() {
 
   function submitGuess() {
     dispatch({ type: 'SUBMIT_GUESS', guessedLetter: state.guessedLetter });
-
-    const newDisplayedWord = state.displayedWord.split(' ');
-    const updatedDisplayedWord = state.selectedInitialWord
-      .split('')
-      .map((letter, index) =>
-        letter === state.guessedLetter
-          ? state.guessedLetter
-          : newDisplayedWord[index],
-      )
-      .join(' ');
-
-    dispatch({ type: 'UPDATE_DISPLAYED_WORD', updatedDisplayedWord });
   }
 
   return (
