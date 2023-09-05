@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import './App.css';
 import useGameReducer from './lib/useGameReducer.ts';
 import { GameStatus } from './components/GameStatus.tsx';
+import { HangmanGame } from './components/HangmanGame.tsx';
 
 function App() {
   const [state, dispatch] = useGameReducer();
@@ -64,28 +65,17 @@ function App() {
           />
         </div>
         <div className="flex-auto w-full md:w-2/8 md:order-2 md:mt-7 mt-4 flex-col text-center md:text-left">
-          <div className="text-6xl">{state.displayedWord}</div>
-
-          <div className="text-3xl mt-4">
-            <input
-              type="text"
-              className="px-4 py-0 border mt-4 focus:outline-none text-sm rounded-md w-56 h-10"
-              placeholder="Type your guess"
-              value={state.guessedLetter}
-              onChange={(e) =>
-                dispatch({
-                  type: 'SET_GUESSED_LETTER',
-                  guessedLetter: e.target.value,
-                })
-              }
-            />
-            <button
-              onClick={submitGuess}
-              className="px-2 py-2 rounded-md font-bold text-sm bg-blue-500 text-white mt-4"
-            >
-              Submit
-            </button>
-          </div>
+          <HangmanGame
+            displayedWord={state.displayedWord}
+            guessedLetter={state.guessedLetter}
+            setGuessedLetter={(guessedLetter) =>
+              dispatch({
+                type: 'SET_GUESSED_LETTER',
+                guessedLetter,
+              })
+            }
+            onSubmitGuess={submitGuess}
+          />
         </div>
       </div>
     </div>
