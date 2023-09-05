@@ -7,35 +7,15 @@ import { HangmanGame } from './components/HangmanGame.tsx';
 function App() {
   const [state, dispatch] = useGameReducer();
 
+  // start a new game when the app loads
   useEffect(() => {
-    console.log('Selected Word:', state.selectedInitialWord);
-  }, [state.selectedInitialWord]);
+    dispatch({ type: 'RESET_GAME' });
+  }, [dispatch]);
 
-  useEffect(() => {
-    console.log('Guessed Letter:', state.guessedLetter);
-  }, [state.guessedLetter]);
-
-  useEffect(() => {
-    const newSelectedInitialWord =
-      state.words[state.selectedWordIndex].toLowerCase();
-    dispatch({
-      type: 'UPDATE_DISPLAYED_WORD',
-      updatedDisplayedWord: '_ '.repeat(newSelectedInitialWord.length),
-    });
-    dispatch({
-      type: 'SET_SELECTED_INITIAL_WORD',
-      selectedInitialWord: newSelectedInitialWord,
-    });
-  }, [state.selectedWordIndex, state.words]);
-
-  //hice esto
-
+  // start a new game when the user clicks "New Game"
   function startNewGame() {
     dispatch({ type: 'RESET_GAME' });
-    dispatch({ type: 'SET_SELECTED_INITIAL_WORD', selectedInitialWord: '' }); // Restablecer la palabra inicial seleccionada
   }
-
-  //hice esto
 
   function submitGuess() {
     dispatch({ type: 'SUBMIT_GUESS', guessedLetter: state.guessedLetter });
