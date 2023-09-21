@@ -22,6 +22,7 @@ function App({ wordProvider }: AppProps) {
 
   function submitGuess() {
     dispatch({ type: 'SUBMIT_GUESS', guessedLetter: state.guessedLetter });
+    console.log('submit')
   }
 
   const { hasWon } = state;
@@ -35,6 +36,7 @@ function App({ wordProvider }: AppProps) {
             guessesLeft={state.guess}
             wrongGuesses={[]}
             onNewGame={startNewGame}
+            wrongGuess={state.wrongGuess}
           />
         </div>
         <div className="flex-auto w-full md:w-2/8 md:order-2 md:mt-7 mt-4 flex-col text-center md:text-left">
@@ -53,7 +55,7 @@ function App({ wordProvider }: AppProps) {
       </div>
       {hasWon && (
         <div className="text-3xl text-green-600 font-bold mt-4">
-         You Won!
+         You Won! Start a new Game
         </div>
       )}
     </div>

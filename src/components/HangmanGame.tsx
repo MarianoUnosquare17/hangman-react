@@ -4,11 +4,22 @@ interface HangmanGameProps {
     setGuessedLetter: (letter: string) => void;
     onSubmitGuess: () => void;
   }
+
   
   export function HangmanGame(props: HangmanGameProps) {
-    const { displayedWord, guessedLetter, setGuessedLetter, onSubmitGuess } =
+    const { displayedWord, guessedLetter, setGuessedLetter, onSubmitGuess} =
       props;
   
+      const handleGuessSubmission = () => {
+        
+        if(/^[a-zA-Z]$/.test(guessedLetter)){
+          onSubmitGuess();
+          setGuessedLetter('');
+        } else {
+          setGuessedLetter('');
+        }
+      };
+
     return (
       <>
         <div className="text-6xl">{displayedWord}</div>
@@ -22,7 +33,7 @@ interface HangmanGameProps {
             onChange={(e) => setGuessedLetter(e.target.value)}
           />
           <button
-            onClick={onSubmitGuess}
+            onClick={handleGuessSubmission}
             className="px-2 py-2 rounded-md font-bold text-sm bg-blue-500 text-white mt-4"
           >
             Submit
